@@ -1,6 +1,7 @@
 package com.StudentsBase.StudentsBase;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -39,18 +40,20 @@ public class StudentController {
         return studentService.updateStudent(id, student);
     }
 
-    @PostMapping("/{studentId}/grades/{subjectId}")
-    public Grade addGradeToStudent(@PathVariable Long studentId, @PathVariable Long subjectId, @RequestBody Integer mark) {
-        return studentService.addGradeToStudent(studentId, subjectId, mark);
+    @GetMapping("/{studentId}/subjects")
+    public List<Subject> getSubjectsAssignedToStudent(@PathVariable Long studentId)
+    {
+        return studentService.getSubjectsAssignedToStudent(studentId);
     }
 
     @PostMapping("/{studentId}/subjects/{subjectId}")
-    public Subject addSubjectToStudent(@PathVariable Long studentId, @PathVariable Long subjectId) {
+    public Student addSubjectToStudent(@PathVariable Long studentId, @PathVariable Long subjectId) {
         return studentService.addSubjectToStudent(studentId, subjectId);
     }
 
-    @GetMapping("/{id}/grades")
-    public List<Grade> getGradesForStudent(@PathVariable Long id) {
-        return studentService.getGradesForStudent(id);
+    @GetMapping("{studentId}/grades")
+    public List<Grade> getGrades(@PathVariable Long studentId)
+    {
+        return studentService.getGrades(studentId);
     }
 }

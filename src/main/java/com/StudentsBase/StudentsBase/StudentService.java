@@ -2,6 +2,8 @@ package com.StudentsBase.StudentsBase;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -47,29 +49,45 @@ public class StudentService {
                 });
     }
 
-    public Grade addGradeToStudent(Long studentId, Long subjectId, Integer mark) {
-        Student student = studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student not found"));
-        Subject subject = subjectRepository.findById(subjectId).orElseThrow(() -> new RuntimeException("Subject not found"));
+    public Student addSubjectToStudent(Long studentId, Long subjectId)
+    {
+        Student student = studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student with id " + studentId + " not found"));
+        Subject subject = subjectRepository.findById(subjectId).orElseThrow(() -> new RuntimeException(("Subject with id " + subjectId + " not found")));
+        boolean subjectAlreadyAssigned = student.getSubjects().contains(subject);
 
-        Grade grade = new Grade();
-        grade.setStudent(student);
-        grade.setSubject(subject);
-        grade.setMark(mark);
-        return gradeRepository.save(grade);
+        if (!subjectAlreadyAssigned)
+        {
+            student.getSubjects().add(subject);
+        }
+        else
+        {
+            throw new RuntimeException(String.format("Subject %d already assigned to student %d", subjectId, studentId));
+        }
+
+        studentRepository.save(student);
+
+        return student;
     }
 
-    public Subject addSubjectToStudent(Long studentId, Long subjectId) {
-        Student student = studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student not found"));
-        Subject subject = subjectRepository.findById(subjectId).orElseThrow(() -> new RuntimeException("Subject not found"));
-
-        Grade grade = new Grade();
-        grade.setStudent(student);
-        grade.setSubject(subject);
-        return gradeRepository.save(grade).getSubject();
+    public List<Subject> getSubjectsAssignedToStudent(Long studentId)
+    {
+        Student student = studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student with id " + studentId + " not found"));
+        return student.getSubjects();
     }
 
-    public List<Grade> getGradesForStudent(Long studentId) {
-        Student student = studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student not found"));
-        return student.getGrades();
+    public List<Grade> getGrades(Long studentId)
+    {
+        List<Grade> allGrades = gradeRepository.findAll();
+        List<Grade> filteredGrades = new ArrayList<>();
+
+        for (Grade g : allGrades)
+        {
+            if (g.getStudent().getId() == studentId)
+            {
+                filteredGrades.add(g);
+            }
+        }
+
+        return filteredGrades;
     }
 }

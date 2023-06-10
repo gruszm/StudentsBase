@@ -38,9 +38,4 @@ public class SubjectController {
     public Subject updateSubject(@PathVariable Long id, @RequestBody Subject subject) {
         return subjectService.updateSubject(id, subject);
     }
-
-    @GetMapping("/{id}/average")
-    public double getAverageMarkForSubject(@PathVariable Long id) {
-        return subjectService.getAverageMarkForSubject(id);
-    }
 }

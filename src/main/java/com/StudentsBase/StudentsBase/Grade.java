@@ -3,9 +3,17 @@ package com.StudentsBase.StudentsBase;
 import jakarta.persistence.*;
 
 @Entity
+@Table
 public class Grade {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @SequenceGenerator(name = "grade_sequence",
+            sequenceName = "grade_sequence",
+            allocationSize = 1
+    )
+    @GeneratedValue(
+            strategy = GenerationType.SEQUENCE,
+            generator = "grade_sequence"
+    )
     private Long id;
     private Integer mark;
     @ManyToOne

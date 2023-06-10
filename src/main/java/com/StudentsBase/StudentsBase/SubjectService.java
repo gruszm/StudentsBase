@@ -2,15 +2,19 @@ package com.StudentsBase.StudentsBase;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 public class SubjectService {
     private final SubjectRepository subjectRepository;
+    private final StudentRepository studentRepository;
 
     @Autowired
-    public SubjectService(SubjectRepository subjectRepository) {
+    public SubjectService(SubjectRepository subjectRepository, StudentRepository studentRepository) {
         this.subjectRepository = subjectRepository;
+        this.studentRepository = studentRepository;
     }
 
     public List<Subject> getSubjects() {
@@ -18,7 +22,7 @@ public class SubjectService {
     }
 
     public Subject getSubject(Long id) {
-        return subjectRepository.findById(id).orElseThrow(() -> new RuntimeException("Subject not found"));
+        return subjectRepository.findById(id).orElseThrow(() -> new RuntimeException(String.format("Subject with id %d not found", id)));
     }
 
     public Subject addSubject(Subject subject) {
@@ -26,6 +30,24 @@ public class SubjectService {
     }
 
     public void deleteSubject(Long id) {
+        Subject thisSubject = subjectRepository.findById(id).orElseThrow(() -> new RuntimeException(("Subject with id " + id + " not found")));
+        List<Student> allStudents = studentRepository.findAll();
+
+        for (Student student : allStudents)
+        {
+            List<String> listOfSubjectsNames = new ArrayList<>();
+
+            for (Subject studentsSubject : student.getSubjects())
+            {
+                listOfSubjectsNames.add(studentsSubject.getName());
+            }
+
+            if (listOfSubjectsNames.contains(thisSubject.getName()))
+            {
+                student.getSubjects().remove(thisSubject);
+            }
+        }
+
         subjectRepository.deleteById(id);
     }
 
@@ -39,11 +61,5 @@ public class SubjectService {
                     newSubject.setId(id);
                     return subjectRepository.save(newSubject);
                 });
-    }
-
-    public double getAverageMarkForSubject(Long subjectId) {
-        Subject subject = subjectRepository.findById(subjectId).orElseThrow(() -> new RuntimeException("Subject not found"));
-        List<Grade> grades = subject.getGrades();
-        return grades.stream().mapToInt(Grade::getMark).average().orElse(Double.NaN);
     }
 }
