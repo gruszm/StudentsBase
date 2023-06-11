@@ -7,43 +7,58 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class StudentService {
+public class StudentService
+{
     private final StudentRepository studentRepository;
     private final GradeRepository gradeRepository;
     private final SubjectRepository subjectRepository;
 
     @Autowired
-    public StudentService(StudentRepository studentRepository, GradeRepository gradeRepository, SubjectRepository subjectRepository) {
+    public StudentService(StudentRepository studentRepository, GradeRepository gradeRepository, SubjectRepository subjectRepository)
+    {
         this.studentRepository = studentRepository;
         this.gradeRepository = gradeRepository;
         this.subjectRepository = subjectRepository;
     }
 
-    public List<Student> getStudents() {
+    public List<Student> getStudents()
+    {
         return studentRepository.findAll();
     }
 
-    public Student getStudent(Long id) {
+    public Student getStudent(Long id)
+    {
         return studentRepository.findById(id).orElseThrow(() -> new RuntimeException("Student not found"));
     }
 
-    public Student addStudent(Student student) {
+    public Student addStudent(Student student)
+    {
+        if (studentRepository.findByIndexNumber(student.getIndexNumber()).isPresent())
+        {
+            throw new RuntimeException("Student with index number " + student.getIndexNumber() + " already exists");
+        }
+
         return studentRepository.save(student);
     }
 
-    public void deleteStudent(Long id) {
+
+    public void deleteStudent(Long id)
+    {
         studentRepository.deleteById(id);
     }
 
-    public Student updateStudent(Long id, Student newStudent) {
+    public Student updateStudent(Long id, Student newStudent)
+    {
         return studentRepository.findById(id)
-                .map(student -> {
+                .map(student ->
+                {
                     student.setFirstName(newStudent.getFirstName());
                     student.setLastName(newStudent.getLastName());
                     student.setIndexNumber(newStudent.getIndexNumber());
                     return studentRepository.save(student);
                 })
-                .orElseGet(() -> {
+                .orElseGet(() ->
+                {
                     newStudent.setId(id);
                     return studentRepository.save(newStudent);
                 });
@@ -75,19 +90,48 @@ public class StudentService {
         return student.getSubjects();
     }
 
-    public List<Grade> getGrades(Long studentId)
+    public List<GradeDTO> getGrades(Long studentId)
     {
-        List<Grade> allGrades = gradeRepository.findAll();
-        List<Grade> filteredGrades = new ArrayList<>();
+        List<Grade> grades = gradeRepository.findByStudentId(studentId);
+        List<GradeDTO> gradeDTOS = new ArrayList<>();
 
-        for (Grade g : allGrades)
+        for (Grade grade : grades)
         {
-            if (g.getStudent().getId() == studentId)
-            {
-                filteredGrades.add(g);
-            }
+            gradeDTOS.add(new GradeDTO(grade));
         }
 
-        return filteredGrades;
+        return gradeDTOS;
     }
+
+    public void removeSubjectFromStudent(Long studentId, Long subjectId)
+    {
+        Student student = studentRepository.findById(studentId)
+                .orElseThrow(() -> new RuntimeException("Student with id " + studentId + " not found"));
+
+        Subject subject = subjectRepository.findById(subjectId)
+                .orElseThrow(() -> new RuntimeException("Subject with id " + subjectId + " not found"));
+
+        if (student.getSubjects().contains(subject))
+        {
+            student.getSubjects().remove(subject);
+            studentRepository.save(student);
+        }
+        else
+        {
+            throw new RuntimeException("Student with id " + studentId + " does not have subject with id " + subjectId);
+        }
+    }
+
+    public GradeDTO getGrade(Long studentId, Long gradeId)
+    {
+        Grade grade = gradeRepository.findById(gradeId).orElseThrow(() -> new RuntimeException("Grade with id " + gradeId + " not found"));
+
+        if (!grade.getStudent().getId().equals(studentId))
+        {
+            throw new RuntimeException("Grade with id " + gradeId + " does not belong to student with id " + studentId);
+        }
+
+        return new GradeDTO(grade);
+    }
+
 }

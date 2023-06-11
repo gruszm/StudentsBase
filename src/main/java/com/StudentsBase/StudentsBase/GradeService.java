@@ -3,7 +3,9 @@ package com.StudentsBase.StudentsBase;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class GradeService
@@ -20,10 +22,20 @@ public class GradeService
         this.subjectRepository = subjectRepository;
     }
 
-    public List<Grade> getGrades()
+    public List<GradeDTO> getGrades()
     {
-        return gradeRepository.findAll();
+        List<Grade> allGrades = gradeRepository.findAll();
+        List<GradeDTO> gradeDTOs = new ArrayList<>();
+
+        for (Grade grade : allGrades)
+        {
+            GradeDTO gradeDTO = new GradeDTO(grade);
+            gradeDTOs.add(gradeDTO);
+        }
+
+        return gradeDTOs;
     }
+
 
     public Grade addGrade(Grade grade)
     {
@@ -35,11 +47,22 @@ public class GradeService
 
         if ((student.getSubjects() == null) || (!student.getSubjects().contains(subject)))
         {
-            throw new RuntimeException("Subject is no assigned to this student");
+            throw new RuntimeException("Subject is not assigned to this student");
         }
         else
         {
-            return gradeRepository.save(grade);
+            Optional<Grade> optionalGrade = gradeRepository.findByStudentIdAndSubjectId(studentId, subjectId);
+
+            if (optionalGrade.isPresent())
+            {
+                Grade existingGrade = optionalGrade.get();
+                existingGrade.setMark(grade.getMark());
+                return gradeRepository.save(existingGrade);
+            }
+            else
+            {
+                return gradeRepository.save(grade);
+            }
         }
     }
 }
