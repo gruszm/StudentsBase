@@ -51,18 +51,10 @@ public class GradeService
         }
         else
         {
-            Optional<Grade> optionalGrade = gradeRepository.findByStudentIdAndSubjectId(studentId, subjectId);
+            Optional<Grade> existingGrade = gradeRepository.findByStudentIdAndSubjectId(studentId, subjectId);
+            existingGrade.get().setMark(grade.getMark());
 
-            if (optionalGrade.isPresent())
-            {
-                Grade existingGrade = optionalGrade.get();
-                existingGrade.setMark(grade.getMark());
-                return gradeRepository.save(existingGrade);
-            }
-            else
-            {
-                return gradeRepository.save(grade);
-            }
+            return gradeRepository.save(existingGrade.get());
         }
     }
 }

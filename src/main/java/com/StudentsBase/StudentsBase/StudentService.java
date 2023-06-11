@@ -81,6 +81,12 @@ public class StudentService
 
         studentRepository.save(student);
 
+        Grade grade = new Grade();
+        grade.setStudent(student);
+        grade.setSubject(subject);
+
+        gradeRepository.save(grade);
+
         return student;
     }
 
@@ -105,14 +111,14 @@ public class StudentService
 
     public void removeSubjectFromStudent(Long studentId, Long subjectId)
     {
-        Student student = studentRepository.findById(studentId)
-                .orElseThrow(() -> new RuntimeException("Student with id " + studentId + " not found"));
-
-        Subject subject = subjectRepository.findById(subjectId)
-                .orElseThrow(() -> new RuntimeException("Subject with id " + subjectId + " not found"));
+        Student student = studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student with id " + studentId + " not found"));
+        Subject subject = subjectRepository.findById(subjectId).orElseThrow(() -> new RuntimeException("Subject with id " + subjectId + " not found"));
 
         if (student.getSubjects().contains(subject))
         {
+            List<Grade> gradesToRemove = gradeRepository.findByStudentAndSubject(student, subject);
+            gradeRepository.deleteAll(gradesToRemove);
+
             student.getSubjects().remove(subject);
             studentRepository.save(student);
         }
@@ -133,5 +139,4 @@ public class StudentService
 
         return new GradeDTO(grade);
     }
-
 }

@@ -3,31 +3,33 @@ package com.StudentsBase.StudentsBase;
 public class GradeDTO
 {
     private Long gradeId;
-    private Long studentId;
-    private Long subjectId;
+    private String firstName;
+    private String lastName;
+    private String subject;
     private Integer mark;
 
     public GradeDTO(Grade grade)
     {
         this.gradeId = grade.getId();
-        this.studentId = grade.getStudent().getId();
-        this.subjectId = grade.getSubject().getId();
+        this.firstName = grade.getStudent().getFirstName();
+        this.lastName = grade.getStudent().getLastName();
+        this.subject = grade.getSubject().getName();
         this.mark = grade.getMark();
     }
 
-    public Long getGradeId()
+    public String getFirstName()
     {
-        return gradeId;
+        return firstName;
     }
 
-    public Long getStudentId()
+    public String getLastName()
     {
-        return studentId;
+        return lastName;
     }
 
-    public Long getSubjectId()
+    public String getSubject()
     {
-        return subjectId;
+        return subject;
     }
 
     public Integer getMark()
