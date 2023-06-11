@@ -2,11 +2,11 @@ package com.StudentsBase.StudentsBase;
 
 public class GradeDTO
 {
-    private Long gradeId;
-    private String firstName;
-    private String lastName;
-    private String subject;
-    private Integer mark;
+    private final Long gradeId;
+    private final String firstName;
+    private final String lastName;
+    private final String subject;
+    private final Double mark;
 
     public GradeDTO(Grade grade)
     {
@@ -32,8 +32,12 @@ public class GradeDTO
         return subject;
     }
 
-    public Integer getMark()
+    public Double getMark()
     {
         return mark;
+    }
+    public Long getGradeId()
+    {
+        return gradeId;
     }
 }

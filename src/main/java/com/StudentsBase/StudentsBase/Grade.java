@@ -16,7 +16,7 @@ public class Grade
             generator = "grade_sequence"
     )
     private Long id;
-    private Integer mark;
+    private Double mark;
     @ManyToOne
     private Student student;
     @ManyToOne
@@ -32,12 +32,12 @@ public class Grade
         this.id = id;
     }
 
-    public Integer getMark()
+    public Double getMark()
     {
         return mark;
     }
 
-    public void setMark(Integer mark)
+    public void setMark(Double mark)
     {
         this.mark = mark;
     }
