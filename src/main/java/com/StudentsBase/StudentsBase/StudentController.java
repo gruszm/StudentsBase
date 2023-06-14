@@ -48,7 +48,6 @@ public class StudentController {
 
      @DeleteMapping("/delete/{id}")
      public String deleteStudent(@PathVariable("id") Long id) {
-        System.out.println("Deleting student with id: " + id);
         studentService.deleteStudent(id);
         return "redirect:/students/";
      }
@@ -56,7 +55,6 @@ public class StudentController {
      @PutMapping("/edit/{id}")
      public String updateStudent(@PathVariable Long id, @ModelAttribute Student
      student, Model model) {
-        System.out.println("Updating student with id: " + id);
         Student updated_student = studentService.updateStudent(id, student);
         model.addAttribute("student", updated_student);
         return "edit_student";

@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Subjects Page</title>
+</head>
+<body>
+<a href="/subjects/add">Add Subject</a>
+<p>Subjects: </p>
+<tr th:each="subject : ${subjects}">
+  <td><a th:href="@{/subjects/edit/{id}(id=${subject.id})}">Edit</a></td>
+  <td th:text="${subject.id}"></td>
+  <td th:text="${subject.name}"></td>
+  <br>
+</tr>
+</body>
+</html>

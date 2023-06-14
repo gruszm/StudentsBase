@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Hello</title>
+    <title>Home Page</title>
 </head>
 <body>
     <a href="/students/add">Dodaj studenta</a>
@@ -9,10 +9,10 @@
     <tr th:each="student : ${students}">
         <td><a th:href="@{/students/edit/{id}(id=${student.id})}">Edit</a></td>
         <td th:text="${student.id}"></td>
-        <td th:text="${student.indexNumber}"><a href=""></a></td>
+        <td th:text="${student.indexNumber}"></td>
         <td th:text="${student.firstName}"></td>
         <td th:text="${student.lastName}"></td>
+        <br>
     </tr>
-    <br>
 </body>
 </html>

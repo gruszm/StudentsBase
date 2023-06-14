@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Subject</title>
+</head>
+<body>
+<a href="/subjects/">Home</a>
+<h1>Edit Subject</h1>
+<form method="POST" th:action="@{/subjects/edit/{id}(id=${subject.id})}">
+    <table>
+        <tr>
+            <td>ID:</td>
+            <td th:text="${subject.id}"></td>
+        </tr>
+        <tr>
+            <td>Name:</td>
+            <td><input type="text" id="name" name="name" th:value="${subject.name}" /></td>
+        </tr>
+    </table>
+    <input type="hidden" name="_method" value="PUT" />
+    <input type="submit" value="Save Subject information" />
+</form>
+<form method="POST" th:action="@{/subjects/delete/{id}(id=${subject.id})}">
+    <input type="hidden" name="_method" value="DELETE" />
+    <input type="submit" value="Delete Subject" />
+</form>
+</body>
+</html>
