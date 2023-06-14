@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Student</title>
+</head>
+<body>
+    <h1>Edit Student</h1>
+    <table>
+        <tr>
+            <td>ID:</td>
+            <td th:text="${student.id}"></td>
+        </tr>
+        <tr>
+            <td>Index number:</td>
+            <td><input type="text" id="indexNumber" name="indexNumber" th:value="${student.indexNumber}" /></td>
+        </tr>
+        <tr>
+            <td>First name:</td>
+            <td><input type="text" id="firstName" name="firstName" th:value="${student.firstName}" /></td>
+        </tr>
+        <tr>
+            <td>Last name:</td>
+            <td><input type="text" id="lastName" name="lastName" th:value="${student.lastName}" /></td>
+        </tr>
+    </table>
+    <form method="POST" th:action="@{/students/edit/{id}(id=${student.id})}">
+        <input type="hidden" name="_method" value="PUT" />
+        <input type="submit" value="Save Student information" />
+    </form>
+    <form method="POST" th:action="@{/students/delete/{id}(id=${student.id})}">
+        <input type="hidden" name="_method" value="DELETE" />
+        <input type="submit" value="Delete Student" />
+    </form>
+</body>
+</html>
