@@ -5,6 +5,7 @@
 </head>
 <body>
     <a href="/students/add">Add Student</a>
+    <a href="/subjects/">Subjects</a>
     <p>Students: </p>
     <tr th:each="student : ${students}">
         <td><a th:href="@{/students/inspect/{id}(id=${student.id})}">Inspect</a></td>
