@@ -124,25 +124,6 @@ public class StudentService
         return gradeDTOS;
     }
 
-    public void removeSubjectFromStudent(Long studentId, Long subjectId)
-    {
-        Student student = studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student with id " + studentId + " not found"));
-        Subject subject = subjectRepository.findById(subjectId).orElseThrow(() -> new RuntimeException("Subject with id " + subjectId + " not found"));
-
-        if (student.getSubjects().contains(subject))
-        {
-            List<Grade> gradesToRemove = gradeRepository.findByStudentAndSubject(student, subject);
-            gradeRepository.deleteAll(gradesToRemove);
-
-            student.getSubjects().remove(subject);
-            studentRepository.save(student);
-        }
-        else
-        {
-            throw new RuntimeException("Student with id " + studentId + " does not have subject with id " + subjectId);
-        }
-    }
-
     public GradeDTO getGrade(Long studentId, Long gradeId)
     {
         Grade grade = gradeRepository.findById(gradeId).orElseThrow(() -> new RuntimeException("Grade with id " + gradeId + " not found"));
