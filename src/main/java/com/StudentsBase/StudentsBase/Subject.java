@@ -42,4 +42,9 @@ public class Subject
     {
         this.name = name;
     }
+
+    public List<Grade> getGrades()
+    {
+        return grades;
+    }
 }

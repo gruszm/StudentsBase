@@ -103,7 +103,6 @@ public class StudentController
         studentService.removeSubjectFromStudent(id, subjectId);
         return getStudent(id, model);
     }
-
     //
     // @GetMapping("/{studentId}/subjects")
     // public List<Subject> getSubjectsAssignedToStudent(@PathVariable Long

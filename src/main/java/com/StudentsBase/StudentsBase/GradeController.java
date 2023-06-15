@@ -14,15 +14,17 @@ import java.util.Map;
 public class GradeController
 {
     private final GradeService gradeService;
+    private final SubjectRepository subjectRepository;
 
     @Autowired
-    public GradeController(GradeService gradeService)
+    public GradeController(GradeService gradeService, SubjectRepository subjectRepository)
     {
         this.gradeService = gradeService;
+        this.subjectRepository = subjectRepository;
     }
 
     @GetMapping
-    public List<GradeDTO> getGrades()
+    public List<Grade> getGrades()
     {
         return gradeService.getGrades();
     }
