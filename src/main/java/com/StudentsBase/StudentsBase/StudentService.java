@@ -96,17 +96,9 @@ public class StudentService
         return student.getSubjects();
     }
 
-    public List<GradeDTO> getGrades(Long studentId)
+    public List<Grade> getGrades(Long studentId)
     {
-        List<Grade> grades = gradeRepository.findByStudentId(studentId);
-        List<GradeDTO> gradeDTOS = new ArrayList<>();
-
-        for (Grade grade : grades)
-        {
-            gradeDTOS.add(new GradeDTO(grade));
-        }
-
-        return gradeDTOS;
+        return gradeRepository.findByStudentId(studentId);
     }
 
     public void removeSubjectFromStudent(Long studentId, Long subjectId)
@@ -128,7 +120,7 @@ public class StudentService
         }
     }
 
-    public GradeDTO getGrade(Long studentId, Long gradeId)
+    public Grade getGrade(Long studentId, Long gradeId)
     {
         Grade grade = gradeRepository.findById(gradeId).orElseThrow(() -> new RuntimeException("Grade with id " + gradeId + " not found"));
 
@@ -137,6 +129,6 @@ public class StudentService
             throw new RuntimeException("Grade with id " + gradeId + " does not belong to student with id " + studentId);
         }
 
-        return new GradeDTO(grade);
+        return grade;
     }
 }

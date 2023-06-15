@@ -23,18 +23,9 @@ public class GradeService
         this.subjectRepository = subjectRepository;
     }
 
-    public List<GradeDTO> getGrades()
+    public List<Grade> getGrades()
     {
-        List<Grade> allGrades = gradeRepository.findAll();
-        List<GradeDTO> gradeDTOs = new ArrayList<>();
-
-        for (Grade grade : allGrades)
-        {
-            GradeDTO gradeDTO = new GradeDTO(grade);
-            gradeDTOs.add(gradeDTO);
-        }
-
-        return gradeDTOs;
+        return gradeRepository.findAll();
     }
 
 

@@ -6,7 +6,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Controller
@@ -67,10 +70,25 @@ public class StudentController
         return getStudent(id, model);
      }
 
-     @GetMapping("/inspect/{id}")
-     public String inspectStudent(@PathVariable Long id, Model model) {
+    @GetMapping("/inspect/{id}")
+    public String inspectStudent(@PathVariable Long id, Model model) {
         Student student = studentService.getStudent(id);
+        List<Grade> grades = studentService.getGrades(id);
+
+        Map<Subject, List<Grade>> subjectGrades = new HashMap<>();
+        for (Grade grade : grades) {
+            Subject subject = grade.getSubject();
+            if (subjectGrades.containsKey(subject)) {
+                subjectGrades.get(subject).add(grade);
+            } else {
+                List<Grade> gradeList = new ArrayList<>();
+                gradeList.add(grade);
+                subjectGrades.put(subject, gradeList);
+            }
+        }
+
         model.addAttribute("student", student);
+        model.addAttribute("subjectGrades", subjectGrades);
         return "inspect_student";
     }
 
@@ -85,7 +103,6 @@ public class StudentController
         studentService.removeSubjectFromStudent(id, subjectId);
         return getStudent(id, model);
     }
-
     //
     // @GetMapping("/{studentId}/subjects")
     // public List<Subject> getSubjectsAssignedToStudent(@PathVariable Long

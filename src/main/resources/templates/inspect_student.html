@@ -26,16 +26,12 @@
             <td th:text="${student.lastName}"></td>
         </tr>
     </table>
-    <h2>Subjects</h2>
-    <table>
-        <tr>
-            <td>ID</td>
-            <td>Name</td>
-        </tr>
-        <tr th:each="subject : ${student.subjects}">
-            <td th:text="${subject.id}"></td>
-            <td th:text="${subject.name}"></td>
-        </tr>
-    </table>
+    <h2>Subjects and Grades</h2>
+    <div th:each="subjectEntry : ${subjectGrades}">
+        <h3 th:text="${subjectEntry.key.name} + ' (ID: ' + ${subjectEntry.key.id} + ')'"></h3>
+        <ul>
+            <li th:each="grade : ${subjectEntry.value}" th:text="${grade.mark}"></li>
+        </ul>
+    </div>
 </body>
 </html>

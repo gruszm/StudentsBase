@@ -62,9 +62,4 @@ public class SubjectController
         return "edit_subject";
     }
 
-    @GetMapping("/statistics")
-    public String getStatistics(Model model) {
-        model.addAttribute("subjects", getSubjects());
-        return "subjects_stats";
-    }
 }
