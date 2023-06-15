@@ -90,21 +90,6 @@ public class StudentService
         return student;
     }
 
-    public Student removeSubjectFromStudent(Long studentId, Long subjectId) {
-        Student student = studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student with id " + studentId + " not found"));
-        Subject subject = subjectRepository.findById(subjectId).orElseThrow(() -> new RuntimeException("Subject with id " + subjectId + " not found"));
-        boolean subjectAssigned = student.getSubjects().contains(subject);
-
-        if (subjectAssigned) {
-            student.getSubjects().remove(subject);
-            studentRepository.save(student);
-        } else {
-            throw new RuntimeException(String.format("Subject %d is not assigned to student %d", subjectId, studentId));
-        }
-
-        return student;
-    }
-
     public List<Subject> getSubjectsAssignedToStudent(Long studentId)
     {
         Student student = studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student with id " + studentId + " not found"));
