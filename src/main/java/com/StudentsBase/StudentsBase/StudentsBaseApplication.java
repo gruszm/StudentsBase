@@ -6,10 +6,12 @@ import org.springframework.web.bind.annotation.RestController;
 
 @SpringBootApplication
 @RestController
-public class StudentsBaseApplication {
+public class StudentsBaseApplication
+{
 
-	public static void main(String[] args) {
-		SpringApplication.run(StudentsBaseApplication.class, args);
-	}
+    public static void main(String[] args)
+    {
+        SpringApplication.run(StudentsBaseApplication.class, args);
+    }
 }
 

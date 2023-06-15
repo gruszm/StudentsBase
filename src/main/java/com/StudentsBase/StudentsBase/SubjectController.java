@@ -5,15 +5,18 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @Controller
 @RequestMapping("/subjects")
-public class SubjectController {
+public class SubjectController
+{
     private final SubjectService subjectService;
 
     @Autowired
-    public SubjectController(SubjectService subjectService) {
+    public SubjectController(SubjectService subjectService)
+    {
         this.subjectService = subjectService;
     }
 

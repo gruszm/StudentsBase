@@ -18,7 +18,7 @@ public class GradeController
     }
 
     @GetMapping
-    public List<Grade> getGrades()
+    public List<GradeDTO> getGrades()
     {
         return gradeService.getGrades();
     }
