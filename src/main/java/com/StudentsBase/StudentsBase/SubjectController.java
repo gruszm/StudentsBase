@@ -1,11 +1,14 @@
 package com.StudentsBase.StudentsBase;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
+@Controller
 @RequestMapping("/subjects")
 public class SubjectController
 {
@@ -17,33 +20,51 @@ public class SubjectController
         this.subjectService = subjectService;
     }
 
-    @GetMapping
-    public List<Subject> getSubjects()
-    {
+    public List<Subject> getSubjects() {
         return subjectService.getSubjects();
     }
 
-    @GetMapping("/{id}")
-    public Subject getSubject(@PathVariable Long id)
-    {
-        return subjectService.getSubject(id);
+    @GetMapping("/")
+    public String subjects_page(Model model) {
+        model.addAttribute("subjects", getSubjects());
+        return "subjects_home";
     }
 
-    @PostMapping
-    public Subject addSubject(@RequestBody Subject subject)
-    {
-        return subjectService.addSubject(subject);
+    @GetMapping("/add")
+    public String addSubject(Model model) {
+        return "add_subject";
     }
 
-    @DeleteMapping("/{id}")
-    public void deleteSubject(@PathVariable Long id)
-    {
+    @PostMapping(value = "/addSubject", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
+    public String addSubject(@ModelAttribute Subject subject) {
+        subjectService.addSubject(subject);
+        return "redirect:/subjects/";
+    }
+
+    @GetMapping("/edit/{id}")
+    public String getSubject(@PathVariable Long id, Model model) {
+        Subject subject = subjectService.getSubject(id);
+        model.addAttribute("subject", subject);
+        return "edit_subject";
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public String deleteSubject(@PathVariable Long id) {
         subjectService.deleteSubject(id);
+        return "redirect:/subjects/";
     }
 
-    @PutMapping("/{id}")
-    public Subject updateSubject(@PathVariable Long id, @RequestBody Subject subject)
-    {
-        return subjectService.updateSubject(id, subject);
+    @PutMapping("/edit/{id}")
+    public String updateSubject(@PathVariable Long id, @ModelAttribute Subject subject,
+                                 Model model) {
+        Subject updated_subject = subjectService.updateSubject(id, subject);
+        model.addAttribute("subject", updated_subject);
+        return "edit_subject";
+    }
+
+    @GetMapping("/statistics")
+    public String getStatistics(Model model) {
+        model.addAttribute("subjects", getSubjects());
+        return "subjects_stats";
     }
 }

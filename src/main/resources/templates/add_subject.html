@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Add Subject</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .add_subject_form {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border: 1px solid black;
+      padding: 20px;
+    }
+
+    .add_subject_form {
+      width: 50%;
+    }
+  </style>
+</head>
+<body>
+<div class="add_subject_form">
+  <a href="/subjects/">Subjects</a>
+  <h1>Add Subject</h1>
+  <form method="POST" action="/subjects/addSubject">
+    <label for="name">Name:</label><br>
+    <input type="text" id="name" name="name"><br>
+    <input type="submit" value="Submit">
+  </form>
+</div>
+</body>
+</html>
