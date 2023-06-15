@@ -6,15 +6,18 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/students")
 public class StudentController {
     private final StudentService studentService;
+    private final SubjectService subjectService;
 
     @Autowired
-    public StudentController(StudentService studentService) {
+    public StudentController(StudentService studentService, SubjectService subjectService) {
         this.studentService = studentService;
+        this.subjectService = subjectService;
     }
 
     public List<Student> getStudents() {
@@ -24,7 +27,7 @@ public class StudentController {
     @GetMapping("/")
     public String home_page(Model model) {
         model.addAttribute("students", getStudents());
-        return "home";
+        return "students_home";
     }
 
     @GetMapping("/add")
@@ -34,15 +37,18 @@ public class StudentController {
 
     @PostMapping(value = "/addStudent", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public String addStudent(@ModelAttribute Student student) {
-        System.out.println(student);
         studentService.addStudent(student);
         return "redirect:/students/";
     }
 
-     @GetMapping("/edit/{id}")
-     public String getStudent(@PathVariable Long id, Model model) {
-        Student student = studentService.getStudent(id); // TODO : add error handling
+    @GetMapping("/edit/{id}")
+    public String getStudent(@PathVariable Long id, Model model) {
+        Student student = studentService.getStudent(id);
+        List<Subject> availableSubjects = subjectService.getSubjects().stream()
+                .filter(subject -> !student.getSubjects().contains(subject))
+                .collect(Collectors.toList());
         model.addAttribute("student", student);
+        model.addAttribute("subjects", availableSubjects);
         return "edit_student";
     }
 
@@ -55,10 +61,28 @@ public class StudentController {
      @PutMapping("/edit/{id}")
      public String updateStudent(@PathVariable Long id, @ModelAttribute Student
      student, Model model) {
-        Student updated_student = studentService.updateStudent(id, student);
-        model.addAttribute("student", updated_student);
-        return "edit_student";
+        studentService.updateStudent(id, student);
+        return getStudent(id, model);
      }
+
+     @GetMapping("/inspect/{id}")
+     public String inspectStudent(@PathVariable Long id, Model model) {
+        Student student = studentService.getStudent(id);
+        model.addAttribute("student", student);
+        return "inspect_student";
+    }
+
+    @PostMapping("/addSubject/{id}")
+    public String addSubject(@PathVariable Long id, @RequestParam Long subject, Model model) {
+        studentService.addSubjectToStudent(id, subject);
+        return getStudent(id, model);
+    }
+
+    @DeleteMapping("/removeSubject/{id}/{subjectId}")
+    public String removeSubject(@PathVariable Long id, @PathVariable Long subjectId, Model model) {
+        studentService.removeSubjectFromStudent(id, subjectId);
+        return getStudent(id, model);
+    }
 
     //
     // @GetMapping("/{studentId}/subjects")
@@ -68,11 +92,6 @@ public class StudentController {
     // return studentService.getSubjectsAssignedToStudent(studentId);
     // }
     //
-    // @PostMapping("/{studentId}/subjects/{subjectId}")
-    // public Student addSubjectToStudent(@PathVariable Long studentId,
-    // @PathVariable Long subjectId) {
-    // return studentService.addSubjectToStudent(studentId, subjectId);
-    // }
     //
     // @GetMapping("{studentId}/grades")
     // public List<Grade> getGrades(@PathVariable Long studentId)

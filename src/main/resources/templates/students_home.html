@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Home Page</title>
+    <title>Students Page</title>
 </head>
 <body>
-    <a href="/students/add">Dodaj studenta</a>
-    <p>Lista studentow: </p>
+    <a href="/students/add">Add Student</a>
+    <p>Students: </p>
     <tr th:each="student : ${students}">
+        <td><a th:href="@{/students/inspect/{id}(id=${student.id})}">Inspect</a></td>
         <td><a th:href="@{/students/edit/{id}(id=${student.id})}">Edit</a></td>
         <td th:text="${student.id}"></td>
         <td th:text="${student.indexNumber}"></td>

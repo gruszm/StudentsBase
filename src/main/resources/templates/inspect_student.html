@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Student</title>
+</head>
+<body>
+    <a href="/students/">Students</a>
+    <a th:href="@{/students/edit/{id}(id=${student.id})}">Edit Student</a>
+    <h1>Student</h1>
+    <table>
+        <tr>
+            <td>ID:</td>
+            <td th:text="${student.id}"></td>
+        </tr>
+        <tr>
+            <td>Index number:</td>
+            <td th:text="${student.indexNumber}"></td>
+        </tr>
+        <tr>
+            <td>First name:</td>
+            <td th:text="${student.firstName}"></td>
+        </tr>
+        <tr>
+            <td>Last name:</td>
+            <td th:text="${student.lastName}"></td>
+        </tr>
+    </table>
+    <h2>Subjects</h2>
+    <table>
+        <tr>
+            <td>ID</td>
+            <td>Name</td>
+        </tr>
+        <tr th:each="subject : ${student.subjects}">
+            <td th:text="${subject.id}"></td>
+            <td th:text="${subject.name}"></td>
+        </tr>
+    </table>
+</body>
+</html>
