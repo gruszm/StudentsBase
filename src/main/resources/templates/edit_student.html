@@ -41,12 +41,23 @@
         <tr>
             <td>ID</td>
             <td>Name</td>
+            <td>Grade</td>
         </tr>
-        <tr th:each="subject : ${student.subjects}">
-            <td th:text="${subject.id}"></td>
-            <td th:text="${subject.name}"></td>
+        <tr th:each="grade : ${grades}">
+            <td th:text="${grade.subject.id}"></td>
+            <td th:text="${grade.subject.name}"></td>
             <td>
-                <form method="POST" th:action="@{/students/removeSubject/{id}/{subjectId}(id=${student.id}, subjectId=${subject.id})}">
+                <form th:action="@{/students/editgrade/{id}(id=${grade.id})}" method="post">
+                    <input type="hidden" name="_method" value="put" />
+                    <input type="number" name="mark" th:value="${grade.mark}" />
+                    <input type="hidden" name="studentId" th:value="${student.id}" />
+                    <input type="hidden" name="subjectId" th:value="${grade.subject.id}" />
+                    <button type="submit">Edit Grade</button>
+                </form>
+                </td>
+                <td>
+                    <form method="POST"
+                        th:action="@{/students/removeSubject/{id}/{subjectId}(id=${student.id}, subjectId=${grade.subject.id})}">
                     <input type="hidden" name="_method" value="DELETE" />
                     <input type="submit" value="Remove Subject" />
                 </form>
