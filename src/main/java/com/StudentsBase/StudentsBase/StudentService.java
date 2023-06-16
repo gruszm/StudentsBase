@@ -38,9 +38,12 @@ public class StudentService
             throw new RuntimeException("Student with index number " + student.getIndexNumber() + " already exists");
         }
 
+        if (!student.getIndexNumber().matches("\\d+")) {
+            throw new IllegalArgumentException("Index number must contain only digits");
+        }
+
         return studentRepository.save(student);
     }
-
 
     public void deleteStudent(Long id)
     {

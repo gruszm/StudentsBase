@@ -49,7 +49,11 @@
             <td>
                 <form th:action="@{/students/editgrade/{id}(id=${grade.id})}" method="post">
                     <input type="hidden" name="_method" value="put" />
-                    <input type="number" name="mark" th:value="${grade.mark}" />
+                    <select name="mark">
+                        <option value=""> </option>
+                        <option th:each="possibleGrade : ${possibleGrades}" th:value="${possibleGrade}" th:text="${possibleGrade}"
+                                th:selected="${possibleGrade == grade.mark}"></option>
+                    </select>
                     <input type="hidden" name="studentId" th:value="${student.id}" />
                     <input type="hidden" name="subjectId" th:value="${grade.subject.id}" />
                     <button type="submit">Edit Grade</button>

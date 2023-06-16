@@ -50,14 +50,16 @@ public class GradeController
             List<Grade> gradesOfThisSubject = subject.getGrades();
 
             double average = 0.0;
+            int size = 0;
             for (Grade grade : gradesOfThisSubject)
             {
                 if (grade.getMark() != null) {
                     average += grade.getMark();
+                    size++;
                 }
             }
 
-            average /= gradesOfThisSubject.size();
+            average /= size;
 
             subjectMeans.put(subject.getName(), average);
         }

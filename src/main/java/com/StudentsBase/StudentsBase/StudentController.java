@@ -6,10 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Controller
@@ -55,7 +52,9 @@ public class StudentController
                 .filter(subject -> !student.getSubjects().contains(subject))
                 .collect(Collectors.toList());
         List<Grade> grades = studentService.getGrades(id);
+        List<Double> possibleGrades = Arrays.asList(2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0);
 
+        model.addAttribute("possibleGrades", possibleGrades);
         model.addAttribute("student", student);
         model.addAttribute("subjects", availableSubjects);
         model.addAttribute("grades", grades);
@@ -77,16 +76,21 @@ public class StudentController
 
     @PutMapping("/editgrade/{id}")
     public String editGrade(@PathVariable("id") Long id,
-                            @RequestParam("mark") Double mark,
+                            @RequestParam(value = "mark", required = false) Double mark,
                             @RequestParam("studentId") Long studentId,
                             @RequestParam("subjectId") Long subjectId,
                             Model model) {
         Grade grade = studentService.getGrade(studentId, subjectId);
-        grade.setMark(mark);
+        if (mark == null) {
+            grade.setMark(null);
+        } else {
+            grade.setMark(mark);
+        }
         gradeService.addGrade(grade);
 
         return getStudent(studentId, model);
     }
+
     @GetMapping("/inspect/{id}")
     public String inspectStudent(@PathVariable Long id, Model model) {
         Student student = studentService.getStudent(id);
@@ -108,18 +112,4 @@ public class StudentController
         studentService.removeSubjectFromStudent(id, subjectId);
         return getStudent(id, model);
     }
-    //
-    // @GetMapping("/{studentId}/subjects")
-    // public List<Subject> getSubjectsAssignedToStudent(@PathVariable Long
-    // studentId)
-    // {
-    // return studentService.getSubjectsAssignedToStudent(studentId);
-    // }
-    //
-    //
-    // @GetMapping("{studentId}/grades")
-    // public List<Grade> getGrades(@PathVariable Long studentId)
-    // {
-    // return studentService.getGrades(studentId);
-    // }
 }
