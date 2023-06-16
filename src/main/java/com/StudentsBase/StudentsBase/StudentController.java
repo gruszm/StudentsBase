@@ -18,11 +18,13 @@ public class StudentController
 {
     private final StudentService studentService;
     private final SubjectService subjectService;
+    private final GradeService gradeService;
 
     @Autowired
-    public StudentController(StudentService studentService, SubjectService subjectService) {
+    public StudentController(StudentService studentService, SubjectService subjectService, GradeService gradeService) {
         this.studentService = studentService;
         this.subjectService = subjectService;
+        this.gradeService = gradeService;
     }
 
     public List<Student> getStudents() {
@@ -52,8 +54,11 @@ public class StudentController
         List<Subject> availableSubjects = subjectService.getSubjects().stream()
                 .filter(subject -> !student.getSubjects().contains(subject))
                 .collect(Collectors.toList());
+        List<Grade> grades = studentService.getGrades(id);
+
         model.addAttribute("student", student);
         model.addAttribute("subjects", availableSubjects);
+        model.addAttribute("grades", grades);
         return "edit_student";
     }
 
@@ -70,25 +75,25 @@ public class StudentController
         return getStudent(id, model);
      }
 
+    @PutMapping("/editgrade/{id}")
+    public String editGrade(@PathVariable("id") Long id,
+                            @RequestParam("mark") Double mark,
+                            @RequestParam("studentId") Long studentId,
+                            @RequestParam("subjectId") Long subjectId,
+                            Model model) {
+        Grade grade = studentService.getGrade(studentId, subjectId);
+        grade.setMark(mark);
+        gradeService.addGrade(grade);
+
+        return getStudent(studentId, model);
+    }
     @GetMapping("/inspect/{id}")
     public String inspectStudent(@PathVariable Long id, Model model) {
         Student student = studentService.getStudent(id);
         List<Grade> grades = studentService.getGrades(id);
 
-        Map<Subject, List<Grade>> subjectGrades = new HashMap<>();
-        for (Grade grade : grades) {
-            Subject subject = grade.getSubject();
-            if (subjectGrades.containsKey(subject)) {
-                subjectGrades.get(subject).add(grade);
-            } else {
-                List<Grade> gradeList = new ArrayList<>();
-                gradeList.add(grade);
-                subjectGrades.put(subject, gradeList);
-            }
-        }
-
         model.addAttribute("student", student);
-        model.addAttribute("subjectGrades", subjectGrades);
+        model.addAttribute("grades", grades);
         return "inspect_student";
     }
 

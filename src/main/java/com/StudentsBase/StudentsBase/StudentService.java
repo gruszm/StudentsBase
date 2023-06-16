@@ -96,11 +96,6 @@ public class StudentService
         return student.getSubjects();
     }
 
-    public List<Grade> getGrades(Long studentId)
-    {
-        return gradeRepository.findByStudentId(studentId);
-    }
-
     public void removeSubjectFromStudent(Long studentId, Long subjectId)
     {
         Student student = studentRepository.findById(studentId).orElseThrow(() -> new RuntimeException("Student with id " + studentId + " not found"));
@@ -120,15 +115,12 @@ public class StudentService
         }
     }
 
-    public Grade getGrade(Long studentId, Long gradeId)
+    public List<Grade> getGrades(Long studentId) {
+        return gradeRepository.findByStudentId(studentId);
+    }
+
+    public Grade getGrade(Long studentId, Long subjectId)
     {
-        Grade grade = gradeRepository.findById(gradeId).orElseThrow(() -> new RuntimeException("Grade with id " + gradeId + " not found"));
-
-        if (!grade.getStudent().getId().equals(studentId))
-        {
-            throw new RuntimeException("Grade with id " + gradeId + " does not belong to student with id " + studentId);
-        }
-
-        return grade;
+        return gradeRepository.findByStudentIdAndSubjectId(studentId, subjectId).orElseThrow(() -> new RuntimeException("Grade not found"));
     }
 }
